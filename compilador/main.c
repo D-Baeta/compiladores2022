@@ -18,17 +18,74 @@ void idOuErro(char *string){
     printf("token: id");
 }
 
+void symbolTable(char *string){
+    printf("entrou na tabela de simbolos");
+
+    return;
+}
+
 int main(){
 
-    char token[] = "'&'";
+    char token[] = "test";
     int i = 0;
     int aux;
 
+    //symbols table
     if(token[i] >= 'a' && token[i] <= 'z'){
-        //chama a tabela
-        printf("eita, deu");
-    }else if((token[i] >= 0 && token[i] <= 9) || token[i] == '.'){
-        //executar depois
+        symbolTable(token);
+
+    //number
+    }else if((token[i] >= '0' && token[i] <= '9') || token[i] == '.'){
+
+        if(token[i] >= '0' && token[i] <= '9'){
+            while(token[i] >= '0' && token[i] <= '9'){
+                i++;
+            }
+            if(token[i] == NULL){
+                printf("token: number");
+                return 0;
+            }
+            if(token[i] != '.'){
+                printf("Error: invalid number");
+                return 0;
+            }else{
+                if(token[i+1] == NULL){
+                    printf("token: number");
+                    return 0;
+                }
+            }
+        }
+
+        i++;
+
+        while(token[i] >= '0' && token[i] <= '9'){
+            i++;
+        }
+
+        if(token[i] == NULL){
+            printf("token: number");
+            return 0;
+        }
+
+        if(token[i] == 'e'){
+            i++;
+            if(token[i] == '-'){
+                i++;
+            }
+
+            while(token[i] >= '0' && token[i] <= '9'){
+                i++;
+            }
+
+            if(token[i] != NULL){
+                printf("Error: invalid number");
+                return 0;
+            }else{
+                printf("token: number");
+                return 0;
+            }
+        }
+
     }else{
         switch("%c", token[i]){
 

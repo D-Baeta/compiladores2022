@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1666235022 source:d:\usuarios\nathan\desktop\gitcompiladores\compiladores2022\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+
