@@ -3,7 +3,76 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define LINE_LENGTH 256
+
+// Aqui, é verificado se o token é uma palavra reservada, se não encontrar, é id ou um token inválido
+// Ainda não temos a hash no entanto para armazenar os ids, que seria o próximo passo.
+// Logo, esta função serve apenas para constatar se a palavra é um comando/id válido, se não, um erro é emitido
 void idOuErro(char *string){
+
+    int i = 0;
+    switch(string[i]){
+
+    case 'r':
+        if(string[i+1] == 'e' && string[i+2] == 'a' && string[i+3] == 'd' && (string[i+4] == NULL || string[i+4] == " " || string[i+4] == ";")){
+            printf("READ");
+            return;
+        }else if(string[i+1] == 'e' && string[i+2] == 't' && string[i+3] == 'u' && string[i+4] == 'r' && string[i+5] == 'n' && (string[i+6] == NULL || string[i+6] == " " || string[i+6] == ";")){
+            printf("RETURN");
+            return;
+        }
+
+    case 's':
+        if(string[i+1] == 't' && string[i+2] == 'r' && string[i+3] == 'u' && string[i+4] == 'c' && string[i+5] == 't' && (string[i+6] == NULL || string[i+6] == " " || string[i+6] == ";")){
+            printf("STRUCT");
+            return;
+        }else if(string[i+1] == 'w' && string[i+2] == 'i' && string[i+3] == 't' && string[i+4] == 'c' && string[i+5] == 'h' && (string[i+6] == NULL || string[i+6] == " " || string[i+6] == ";")){
+            printf("SWITCH");
+            return;
+        }
+
+    case 'b':
+        if(string[i+1] == 'r' && string[i+2] == 'e' && string[i+3] == 'a' && string[i+4] == 'k' && (string[i+5] == NULL || string[i+5] == " " || string[i+5] == ";")){
+            printf("BREAK");
+            return;
+        }
+
+    case 'p':
+        if(string[i+1] == 'r' && string[i+2] == 'i' && string[i+3] == 'n' && string[i+4] == 't' && (string[i+5] == NULL || string[i+5] == " " || string[i+5] == ";")){
+            printf("PRINT");
+            return;
+        }
+
+    case 'w':
+        if(string[i+1] == 'h' && string[i+2] == 'i' && string[i+3] == 'l' && string[i+4] == 'e' && (string[i+5] == NULL || string[i+5] == " " || string[i+5] == ";")){
+            printf("PRINT");
+            return;
+        }
+
+    case 'c':
+        if(string[i+1] == 'a' && string[i+2] == 't' && string[i+3] == 'c' && string[i+4] == 'h' && (string[i+5] == NULL || string[i+5] == " " || string[i+5] == ";")){
+            printf("CATCH");
+            return;
+        }
+
+    case 'i':
+        if(string[i+1] == 'f' && (string[i+2] == NULL || string[i+2] == " " || string[i+2] == ";")){
+            printf("IF");
+            return;
+        }
+
+    case 'e':
+        if(string[i+1] == 'l' && string[i+2] == 's' && string[i+3] == 'e' && (string[i+4] == NULL || string[i+4] == " " || string[i+4] == ";")){
+            printf("ELSE");
+            return;
+        }
+
+    case 't':
+        if(string[i+1] == 'r' && string[i+2] == 'y' && (string[i+3] == NULL || string[i+3] == " " || string[i+3] == ";")){
+            printf("TRY");
+            return;
+        }
+    }
 
     bool verificador;
 
@@ -15,26 +84,19 @@ void idOuErro(char *string){
         }
     }
 
-    printf("token: id");
+    printf("ID.");
+    printf(string);
 }
 
-void symbolTable(char *string){
-    printf("entrou na tabela de simbolos");
-
-    return;
-}
-
-int main(){
-
-    char token[] = "test";
+void analyser(char *token){
     int i = 0;
     int aux;
 
-    //symbols table
+    //caso começe com uma letra minuscula, ele analisa se é um id, uma palavra conhecida ou se é uma entrada inválida
     if(token[i] >= 'a' && token[i] <= 'z'){
-        symbolTable(token);
+        idOuErro(token);
 
-    //number
+    //caso comece com um número, ele verifica se é um número válido
     }else if((token[i] >= '0' && token[i] <= '9') || token[i] == '.'){
 
         if(token[i] >= '0' && token[i] <= '9'){
@@ -42,7 +104,8 @@ int main(){
                 i++;
             }
             if(token[i] == NULL){
-                printf("token: number");
+                printf("NUMBER.");
+                printf(token);
                 return 0;
             }
             if(token[i] != '.'){
@@ -50,7 +113,8 @@ int main(){
                 return 0;
             }else{
                 if(token[i+1] == NULL){
-                    printf("token: number");
+                    printf("NUMBER.");
+                    printf(token);
                     return 0;
                 }
             }
@@ -63,7 +127,8 @@ int main(){
         }
 
         if(token[i] == NULL){
-            printf("token: number");
+            printf("NUMBER.");
+            printf(token);
             return 0;
         }
 
@@ -81,12 +146,15 @@ int main(){
                 printf("Error: invalid number");
                 return 0;
             }else{
-                printf("token: number");
+                printf("NUMBER.");
+                printf(token);
                 return 0;
             }
         }
 
     }else{
+        //caso não seja nem um numero, id ou uma palavra conhecida, ele verifica se é um dos simbolos conhecidos
+        //se não se tratar de um token válido, ele retorna um erro
         switch("%c", token[i]){
 
         //literal
@@ -97,7 +165,7 @@ int main(){
                 if(token[i] == '\''){
                     i++;
                     if(token[i] == NULL){
-                        printf("token: literal char");
+                        printf("LITERAL_CHAR");
                         break;
                     }
                 }else if(token[i] >= 'a' && token[i] <= 'z'){
@@ -114,7 +182,7 @@ int main(){
                     if(token[i] == '\''){
                         i++;
                         if(token[i] == NULL){
-                            printf("token: literal string");
+                            printf("LITERAL_STRING");
                             break;
                         }
                     }
@@ -124,164 +192,90 @@ int main(){
             printf("Erro, token invalido");
             break;
 
-        //and
+        //and / address
         case '&':
-            i++;
-            if(token[i] == '&'){
-                i++;
-                if(token[i] == NULL){
-                    printf("token: and");
-                    break;
-                }
+            //and
+            if(token[i+1] == '&'){
+                printf("AND");
+            //address
+            }else{
+                printf("ADDRESS");
             }
-
-            printf("Erro, token invalido");
             break;
-
 
         //or
         case '|':
-            i++;
-            if(token[i] == NULL){
-                printf("token: or");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("OR");
             break;
 
         //rkey
         case '}':
-            i++;
-            if(token[i] == NULL){
-                printf("token: rkey");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("RKEY");
             break;
 
         //lkey
         case '{':
-            i++;
-            if(token[i] == NULL){
-                printf("token: lkey");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("LKEY");
             break;
 
         //rbrack
         case ']':
-            i++;
-            if(token[i] == NULL){
-                printf("token: rbrack");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("RBRACK");
             break;
 
         //lbrack
         case '[':
-            i++;
-            if(token[i] == NULL){
-                printf("token: lbrack");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("LBRACK");
             break;
 
         //rparen
         case ')':
-            i++;
-            if(token[i] == NULL){
-                printf("token: rparen");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("RPAREN");
             break;
 
         //lparen
         case '(':
-            i++;
-            if(token[i] == NULL){
-                printf("token: lparen");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("LPAREN");
             break;
 
         //add
         case '+':
-            i++;
-            if(token[i] == NULL){
-                printf("token: add");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("ADD");
             break;
 
         //sub
         case '-':
-            i++;
-            if(token[i] == NULL){
-                printf("token: sub");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("SUB");
             break;
 
         //mult
         case '*':
-            i++;
-            if(token[i] == NULL){
-                printf("token: mult");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("MULT");
             break;
 
         //resto
         case '%':
-            i++;
-            if(token[i] == NULL){
-                printf("token: resto");
-                break;
-            }
-
-            printf("Erro, token invalido");
+            printf("REST");
             break;
 
         //div e comment
         case '/':
-            i++;
 
-            //div
-            if(token[i] == NULL){
-                printf("token: div");
+            if(token[i+1] != '*'){
+                printf("DIV");
                 break;
-
-            //comment
-            }else if(token[i] == '*'){
+            }else{
                 i++;
                 //limite de 1000 caracters por comentario, temporario
                 while(i < 1000){
+
                     if(token[i] == NULL){
                         printf("Erro: eof encontrado no meio do comentario.");
                         break;
 
                     }else if(token[i] == '*'){
                         aux = i + 1;
-                        if(token[aux] == '\\'){
-
+                        if(token[aux] == '\/'){
                             break;
 
                         }else if(token[aux] == NULL){
@@ -294,125 +288,95 @@ int main(){
                 break;
             }
 
-            printf("Erro, token invalido");
-            break;
-
         //colon e doublecolon
         case ':':
-            i++;
-
-            //colon
-            if(token[i] == NULL){
-                printf("token: colon");
-                break;
-
             //doublecolon
-            }else if(token[i] == ':'){
-                i++;
-                if(token[i] == NULL){
-                    printf("token: doublecolon");
-                    break;
-                }
+            if(token[i+1] == ':'){
+                printf("DBCOLON");
+            //colon
+            }else{
+                printf("COLON");
             }
+            break;
 
         //semicolon
         case ';':
-            i++;
-
-            //semicolon
-            if(token[i] == NULL){
-                printf("token: semicolon");
-                break;
-            }
-
-        printf("Erro, token invalido");
-        break;
+            printf("SEMICOLON");
+            break;
 
         //equal e equalto
         case '=':
-            i++;
-
+            //equalTo
+            if(token[i+1] == '='){
+                printf("EQUALTO");
             //equal
-            if(token[i] == NULL){
-                printf("token: equal");
-                break;
-
-            //equalto
-            }else if(token[i] == '='){
-                i++;
-                if(token[i] == NULL){
-                    printf("token: equalto");
-                    break;
-                }
+            }else{
+                printf("EQUAL");
             }
+            break;
 
         printf("Erro, token invalido");
         break;
 
         //negacao e dif
         case '!':
-            i++;
-
-            //negacao
-            if(token[i] == NULL){
-                printf("token: negacao");
-                break;
+            //greaterOrEqual
+            if(token[i+1] == '='){
+                printf("DIF");
+            //greater
+            }else{
+                printf("NEG");
             }
+            break;
 
-            //dif
-            else if(token[i] == '='){
-                i++;
-                if(token[i] == NULL){
-                    printf("token: dif");
-                    break;
-                }
-            }
-
-        printf("Erro, token invalido");
-        break;
-
-        //lesserOrEqual and lesser
+        //lesserOrEqual
         case '<':
-            i++;
-
-            //lesser
-            if(token[i] == NULL){
-                printf("token: lesser");
-                break;
-
             //lesserOrEqual
-            }else if(token[i] == '='){
-                i++;
-                if(token[i] == NULL){
-                    printf("token: lesserOrEqual");
-                    break;
-                }
+            if(token[i+1] == '='){
+                printf("LESSEROREQUAL");
+            //greater
+            }else{
+                printf("LESSER");
             }
-
-        printf("Erro, token invalido");
-        break;
+            break;
 
         //greaterOrEqual and greater
         case '>':
-            i++;
-
-            //greater
-            if(token[i] == NULL){
-                printf("token: greater");
-                break;
-
             //greaterOrEqual
-            }else if(token[i] == '='){
-                i++;
-                if(token[i] == NULL){
-                    printf("token: greaterOrEqual");
-                    break;
-                }
+            if(token[i+1] == '='){
+                printf("GREATEROREQUAL");
+            //greater
+            }else{
+                printf("GREATER");
             }
-
-        printf("Erro, token invalido");
-        break;
-
+            break;
         }
     }
+}
+
+int main(){
+
+    printf("ANALISE LEXICA - TOKENS\n");
+    printf("----------------------------------------\n");
+    printf("LEXEMA\n");
+    printf("----------------------------------------\n");
+
+    FILE* file = fopen("test.txt", "r"); /*abre o arquivo "test.txt" */
+    char line[256];
+    char *ptr;
+    while (fgets(line, sizeof(line), file)) {
+        /* analisa as linhas */
+        ptr = strtok(line, " "); //divide pelo espaço
+        while(ptr != NULL)  // enquanto ainda há algo na string
+        {
+            analyser(ptr);
+            printf("\n");
+            ptr = strtok(NULL, " "); // continua dividindo
+        }
+    }
+    fclose(file);
+
+    return 0;
+
+    printf("\n");
 }

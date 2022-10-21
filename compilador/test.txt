@@ -1,0 +1,4 @@
+read return struct switch if else try catch while ;
+v1 = 3 ;
+b = 3 / 2 ; /*comment*/
+if ( v1 + b >= 5 ) { c = 5 ; }
